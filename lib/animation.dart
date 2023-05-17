@@ -1,17 +1,40 @@
 import 'package:flutter/material.dart';
 
 
-class AnimationApp extends StatelessWidget {
+class AnimationApp extends StatefulWidget {
   const AnimationApp({super.key});
 
   @override
+  State<AnimationApp> createState() => _AnimationAppState();
+}
+
+class _AnimationAppState extends State<AnimationApp> with SingleTickerProviderStateMixin {
+
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
-  bool _isButtonPressed = true;
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 235, 194, 27), //background color of appbar
+          backgroundColor:const Color.fromARGB(255, 235, 194, 27), //background color of appbar
           title:const Text("My AppBar"), //title aof appbar
           centerTitle: true,
 
@@ -53,24 +76,19 @@ class AnimationApp extends StatelessWidget {
   ),
 
  ),
- body: Column(
-  children: [
-    AnimatedContainer(
-      duration: const Duration(microseconds: 500),
-      width: 200.0,
-      height: 200.0,
-       color: _isButtonPressed ? Colors.blue : Colors.red,
-    )
-  ],
- ),
-
-    //     AnimatedContainer(
-    //   duration: const Duration(seconds: 1),
-    //   width: 200.0,
-    //   height: 200.0,
-    //   color: Colors.blue,
-    // ),
-
+ body: AnimatedBuilder(
+        animation: _animationController,
+  builder: (BuildContext context, Widget? child) {
+    return Container(
+      alignment: Alignment.center,
+      color: Color.lerp(Colors.blue, Colors.red, _animation.value),
+      child: Text(
+        'Animated Body',
+        style: TextStyle(fontSize: 24, color: Colors.white),
+      ),
+    );
+  },
+      ),
 
 
         bottomNavigationBar: BottomNavigationBar(
@@ -98,5 +116,4 @@ class AnimationApp extends StatelessWidget {
 
     );
   }
-
 }
