@@ -10,24 +10,32 @@ class AnimationApp extends StatefulWidget {
 
 class _AnimationAppState extends State<AnimationApp> with SingleTickerProviderStateMixin {
 
+
+
   late AnimationController _animationController;
   late Animation<double> _animation;
 
   @override
   void initState() {
+    super.initState();
     _animationController = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds:5),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-    super.initState();
+    _animation = Tween<double>(begin: 0.0, end: 200.0).animate(_animationController);
+    _animationController.addListener(() {
+      setState(() {
+        
+      });
+    });
+    _animationController.forward();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _animationController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +84,14 @@ class _AnimationAppState extends State<AnimationApp> with SingleTickerProviderSt
   ),
 
  ),
- body: AnimatedBuilder(
-        animation: _animationController,
-  builder: (BuildContext context, Widget? child) {
-    return Container(
-      alignment: Alignment.center,
-      color: Color.lerp(Colors.blue, Colors.red, _animation.value),
-      child: Text(
-        'Animated Body',
-        style: TextStyle(fontSize: 24, color: Colors.white),
-      ),
-    );
-  },
-      ),
+ body: Center(
+ 
+  child: Container(
+    width: _animation.value,
+    height: _animation.value,
+    color: Colors.blue,
+  ),
+ ),
 
 
         bottomNavigationBar: BottomNavigationBar(
